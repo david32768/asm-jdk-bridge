@@ -197,7 +197,7 @@ public class JdkClassWriter extends ClassVisitor {
             moduleAttributeConsumers.add(moduleAttributeBuilder -> {
                 ClassDesc[] descriptions = new ClassDesc[providers.length];
                 for (int index = 0; index < providers.length; index++) {
-                    descriptions[index] = ClassDesc.of(providers[index]);
+                    descriptions[index] = ClassDesc.ofInternalName(providers[index]);
                 }
                 moduleAttributeBuilder.provides(ClassDesc.ofInternalName(service), descriptions);
             });
