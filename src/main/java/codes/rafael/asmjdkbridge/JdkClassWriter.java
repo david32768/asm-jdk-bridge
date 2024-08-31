@@ -62,6 +62,7 @@ public class JdkClassWriter extends ClassVisitor {
     }));
 
     private byte[] bytes;
+    private WritingModuleVisitor incompleteModuleVisitor;
 
     public JdkClassWriter(int flags) {
         this(flags, null);
@@ -113,7 +114,9 @@ public class JdkClassWriter extends ClassVisitor {
 
     @Override
     public ModuleVisitor visitModule(String name, int access, String version) {
-        return new WritingModuleVisitor(name, access, version);
+        assert this.incompleteModuleVisitor == null;
+        this.incompleteModuleVisitor = new WritingModuleVisitor(name, access, version);
+        return this.incompleteModuleVisitor;
     }
 
     class WritingModuleVisitor extends ModuleVisitor {
@@ -205,6 +208,7 @@ public class JdkClassWriter extends ClassVisitor {
 
         @Override
         public void visitEnd() {
+            JdkClassWriter.this.incompleteModuleVisitor = null;
             classConsumers.add(classBuilder -> {
                 classBuilder.with(ModuleAttribute.of(
                         ModuleDesc.of(name),
@@ -1068,6 +1072,9 @@ public class JdkClassWriter extends ClassVisitor {
 
     @Override
     public void visitEnd() {
+        if (incompleteModuleVisitor != null) {
+            incompleteModuleVisitor.visitEnd();
+        }
         ClassFile classFile;
         if ((flags & ClassWriter.COMPUTE_FRAMES) == 0) {
             classFile = ClassFile.of(ClassFile.DeadCodeOption.KEEP_DEAD_CODE, ClassFile.StackMapsOption.DROP_STACK_MAPS);
