@@ -1041,7 +1041,7 @@ public class JdkClassWriter extends ClassVisitor {
                 if (signature != null) {
                     methodBuilder.with(SignatureAttribute.of(classBuilder.constantPool().utf8Entry(signature)));
                 }
-                if (exceptions != null) {
+                if (exceptions != null && exceptions.length > 0) {
                     ClassDesc[] entries = new ClassDesc[exceptions.length];
                     for (int index = 0; index < exceptions.length; index++) {
                         entries[index] = ClassDesc.ofInternalName(exceptions[index]);
