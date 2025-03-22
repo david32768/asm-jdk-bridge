@@ -4,7 +4,7 @@
     <parent>
         <groupId>codes.rafael.asmjdkbridge</groupId>
         <artifactId>asm-jdk-bridge-parent</artifactId>
-        <version>0.0.7-SNAPSHOT</version>
+        <version>0.0.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>asm-jdk-bridge</artifactId>
@@ -62,6 +62,10 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.4.2</version>
                 <configuration>
+                    <excludes>
+                        <exclude>META-INF/versions/9/codes</exclude>
+                        <exclude>META-INF/versions/9/codes/**</exclude>
+                    </excludes>
                     <archive>
                         <manifestEntries>
                             <Multi-Release>true</Multi-Release>
